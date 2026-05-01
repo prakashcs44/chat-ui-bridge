@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ChatUIBridge Minimal</title>
+</head>
+<body>
+    <!-- Essential Inputs for Automation -->
+    <select id="modelSelect">
+        <option value="qwen/qwen3-32b">Qwen 3 (32B)</option>
+        <option value="canopylabs/orpheus-arabic-saudi">Orpheus Arabic (Saudi)</option>
+        <option value="canopylabs/orpheus-v1-english">Orpheus v1 (English)</option>
+        <option value="groq/compound">Groq Compound</option>
+        <option value="groq/compound-mini">Groq Compound Mini</option>
+        <option value="llama-3.1-8b-instant">Llama 3.1 (8B Instant)</option>
+        <option value="openai/gpt-oss-20b">GPT OSS (20B)</option>
+        <option value="openai/gpt-oss-120b">GPT OSS (120B)</option>
+        <option value="openai/gpt-oss-safeguard-20b">GPT OSS Safeguard (20B)</option>
+        <option value="whisper-large-v3">Whisper Large v3</option>
+        <option value="whisper-large-v3-turbo">Whisper Large v3 Turbo</option>
+    </select>
+
+    <input type="text" id="userInput">
+    <button onclick="handleRequest()" id="submitBtn">Process</button>
+
+    <!-- Essential Output for Automation -->
+    <div id="result-container" style="display: none;">
+        <div id="output"></div>
+    </div>
+
+    <script>
+        async function handleRequest() {
+            const input = document.getElementById('userInput');
+            const modelSelect = document.getElementById('modelSelect');
+            const output = document.getElementById('output');
+            const container = document.getElementById('result-container');
+
+            if (!input.value.trim()) return;
+
+            container.style.display = 'none';
+
+            try {
+                const response = await fetch('http://localhost:8000/process', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        text: input.value,
+                        model_name: modelSelect.value 
+                    })
+                });
+
+                const data = await response.json();
+                
+                // Set pure output
+                output.innerText = data.pure_output;
+                container.style.display = 'block';
+            } catch (error) {
+                output.innerText = "Error";
+                container.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
