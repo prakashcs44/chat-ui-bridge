@@ -50,10 +50,10 @@ async def process_text(data: InputData):
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8000))
     host = os.environ.get("HOST", "0.0.0.0")
-    debug = os.environ.get("RELOAD", "true") == "true"
+    reload = os.environ.get("RELOAD", "true") == "true"
     uvicorn.run(
         "main:app",
         host=host,
         port=port,
-        reload=debug,
+        reload=reload,
     )
